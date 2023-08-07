@@ -7,14 +7,17 @@ import { usePathname, useRouter } from 'next/navigation'
 
 
 const PromptCard = ({post, handleTagClick, handleEdit, handleDelete}) => {
+  const { data: session } = useSession();
   const [creatorData , setCreatorData] = useState(null)
   const [copy, setCopy] = useState('')
+  const path = usePathname()
   
   useEffect(() => {
     if(post && post.creator) {
+      console.log('creator', post.creator)
       setCreatorData(post.creator)
     }
-  }, [post])
+  }, [post, session?.user.id])
 
   if(!creatorData) {
     return (
@@ -64,6 +67,22 @@ const PromptCard = ({post, handleTagClick, handleEdit, handleDelete}) => {
       >
         {post.tag}
       </p>
+
+      {session?.user.id === post.creator._id && path === '/profile' && (
+        <div className='mt-5 flex-center gap-4 border-t border-gray-100 pt-3'>
+          <p 
+            className='font-inter text-sm green_gradient cursor-pointer' 
+            onClick={handleEdit}>
+            Edit
+          </p>
+          <p 
+            className='font-inter text-sm orange_gradient cursor-pointer' 
+            onClick={handleDelete}
+          >
+            Delete
+          </p>
+        </div>
+      )}
     </div>
   )
 }
