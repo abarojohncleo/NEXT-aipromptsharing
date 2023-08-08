@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react'
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import  Profile from '@components/profile';
 
@@ -12,17 +12,21 @@ const ProfilePage = () => {
   
   const [posts, setPosts] = useState([]);
 
+  const searchParams = useSearchParams();
+  const promptId = searchParams.get('id')
+  const id = promptId.trim()
+  const creatorName=searchParams.get('name')
+
   useEffect(() => {
     const fetchPosts = async () => {
-      if (session?.user.id) {
-        console.log('user_id', session?.user.id);
-        const response = await fetch(`/api/users/${session?.user.id}/posts`);
+      if (id) {
+        const response = await fetch(`/api/users/${id}/posts`);
         const data = await response.json();
         setPosts(data);
       }
     };
     fetchPosts();
-  }, [session?.user.id]);
+  }, [id]);
 
   const handleEdit = (post) => {
     router.push(`/update-prompt?id= ${post._id}`)
@@ -49,8 +53,8 @@ const ProfilePage = () => {
 
   return (
     <Profile 
-      name={session?.user.name}
-      desc = 'Welcome to your personalized profile page'
+      name={creatorName}
+      userId={id}
       data = {posts}
       handleEdit={handleEdit}
       handleDelete={handleDelete}

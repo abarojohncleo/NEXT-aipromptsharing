@@ -3,7 +3,6 @@ import Prompt from "@models/prompt";
 
 // GET
 export const GET = async (request, {params}) => {
-  console.log('params on get prompt', params)
   try {
     if (!params.id.match(/^[0-9a-fA-F]{24}$/)) {
       return new Response('Item not found', {status: 400})

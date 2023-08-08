@@ -26,8 +26,7 @@ const UpdatePrompt = () => {
 
     const getPromptDetail = async() => {
       const response = await fetch(`/api/prompt/${id}`);
-      const data = await response.json()
-      console.log('update data', data)
+      const data = await response.json();
       setPost((prevPost) => ({
         ...prevPost,
         prompt: data.prompt,
